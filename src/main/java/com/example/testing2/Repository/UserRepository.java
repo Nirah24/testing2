@@ -69,6 +69,64 @@
 
 
 
+//package com.example.testing2.Repository;
+//
+//import com.example.testing2.Model.User;
+//import com.example.testing2.Utils.DatabaseConnection;
+//
+//import java.sql.Connection;
+//import java.sql.PreparedStatement;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//
+//public class UserRepository {
+//
+//    public void createDefaultAdmin() {
+//
+//        String sql = """
+//            INSERT OR IGNORE INTO users (username, password, role)
+//            VALUES ('admin', 'admin', 'ADMIN')
+//        """;
+//
+//        try (Connection conn = DatabaseConnection.getConnection();
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            pstmt.executeUpdate();
+//            System.out.println("Default admin checked/created.");
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public User findByUsername(String username) {
+//
+//        String sql = "SELECT * FROM users WHERE username = ?";
+//
+//        try (Connection conn = DatabaseConnection.getConnection();
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            pstmt.setString(1, username);
+//            ResultSet rs = pstmt.executeQuery();
+//
+//            if (rs.next()) {
+//                return new User(
+//                        rs.getInt("id"),
+//                        rs.getString("username"),
+//                        rs.getString("password"),
+//                        rs.getString("role")
+//                );
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return null; // user not found
+//    }
+//}
+
+
 package com.example.testing2.Repository;
 
 import com.example.testing2.Model.User;
@@ -78,11 +136,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 public class UserRepository {
 
     public void createDefaultAdmin() {
-
         String sql = """
             INSERT OR IGNORE INTO users (username, password, role)
             VALUES ('admin', 'admin', 'ADMIN')
@@ -99,8 +157,32 @@ public class UserRepository {
         }
     }
 
-    public User findByUsername(String username) {
+    public User findById(int id) {
+        String sql = "SELECT * FROM users WHERE id = ?";
 
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("username"),
+                        rs.getString("password"),
+                        rs.getString("role")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public User findByUsername(String username) {
         String sql = "SELECT * FROM users WHERE username = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -122,6 +204,22 @@ public class UserRepository {
             e.printStackTrace();
         }
 
-        return null; // user not found
+        return null;
+    }
+
+    public boolean isEmpty() {
+        String sql = "SELECT COUNT(*) FROM users";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            return rs.getInt(1) == 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 }

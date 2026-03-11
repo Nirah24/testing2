@@ -162,6 +162,74 @@
 
 
 
+//package com.example.testing2.Repository;
+//
+//import com.example.testing2.Model.Category;
+//import com.example.testing2.Utils.DatabaseConnection;
+//
+//import java.sql.*;
+//import java.util.ArrayList;
+//import java.util.List;
+//
+//public class CategoryRepository {
+//
+//    public void save(Category category) {
+//
+//        String sql = "INSERT INTO categories(name) VALUES(?)";
+//
+//        try (Connection conn = DatabaseConnection.getConnection();
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            pstmt.setString(1, category.getName());
+//            pstmt.executeUpdate();
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
+//    public List<Category> findAll() {
+//
+//        List<Category> categories = new ArrayList<>();
+//        String sql = "SELECT * FROM categories";
+//
+//        try (Connection conn = DatabaseConnection.getConnection();
+//             Statement stmt = conn.createStatement();
+//             ResultSet rs = stmt.executeQuery(sql)) {
+//
+//            while (rs.next()) {
+//                categories.add(
+//                        new Category(
+//                                rs.getInt("id"),
+//                                rs.getString("name")
+//                        )
+//                );
+//            }
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return categories;
+//    }
+//
+//    public void delete(int id) {
+//
+//        String sql = "DELETE FROM categories WHERE id = ?";
+//
+//        try (Connection conn = DatabaseConnection.getConnection();
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            pstmt.setInt(1, id);
+//            pstmt.executeUpdate();
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//}
+
+
 package com.example.testing2.Repository;
 
 import com.example.testing2.Model.Category;
@@ -174,8 +242,7 @@ import java.util.List;
 public class CategoryRepository {
 
     public void save(Category category) {
-
-        String sql = "INSERT INTO categories(name) VALUES(?)";
+        String sql = "INSERT OR IGNORE INTO categories(name) VALUES(?)";
 
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -189,7 +256,6 @@ public class CategoryRepository {
     }
 
     public List<Category> findAll() {
-
         List<Category> categories = new ArrayList<>();
         String sql = "SELECT * FROM categories";
 
@@ -198,12 +264,10 @@ public class CategoryRepository {
              ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
-                categories.add(
-                        new Category(
-                                rs.getInt("id"),
-                                rs.getString("name")
-                        )
-                );
+                categories.add(new Category(
+                        rs.getInt("id"),
+                        rs.getString("name")
+                ));
             }
 
         } catch (SQLException e) {
@@ -213,8 +277,83 @@ public class CategoryRepository {
         return categories;
     }
 
-    public void delete(int id) {
+    public Category findById(int id) {
+        String sql = "SELECT * FROM categories WHERE id = ?";
 
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new Category(
+                        rs.getInt("id"),
+                        rs.getString("name")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public Category findByName(String name) {
+        String sql = "SELECT * FROM categories WHERE name = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, name);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new Category(
+                        rs.getInt("id"),
+                        rs.getString("name")
+                );
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+//    public void update(Category category) {
+//        String sql = "UPDATE categories SET name = ? WHERE id = ?";
+//
+//        try (Connection conn = DatabaseConnection.getConnection();
+//             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+//
+//            pstmt.setString(1, category.getName());
+//            pstmt.setInt(2, category.getId());
+//            pstmt.executeUpdate();
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    public void update(Category category) {
+        String sql = "UPDATE categories SET name = ? WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, category.getName());
+            pstmt.setInt(2, category.getId());
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void delete(int id) {
         String sql = "DELETE FROM categories WHERE id = ?";
 
         try (Connection conn = DatabaseConnection.getConnection();
@@ -226,5 +365,21 @@ public class CategoryRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean isEmpty() {
+        String sql = "SELECT COUNT(*) FROM categories";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
+            return rs.getInt(1) == 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
 }
