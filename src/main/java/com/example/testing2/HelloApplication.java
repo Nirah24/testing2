@@ -84,75 +84,204 @@ public class HelloApplication extends Application {
 //}
 
 
-    public static void main(String[] args) {
-        DatabaseInitializer.initialize();
+//    public static void main(String[] args) {
+//        DatabaseInitializer.initialize();
+//
+//        UserService userService = new UserService();
+//        User loggedIn = userService.login("admin", "admin");
+//
+//        if (loggedIn != null) {
+//            System.out.println("Login successful: " + loggedIn.getUsername() + " (" + loggedIn.getRole() + ")");
+//        } else {
+//            System.out.println("Login failed.");
+//        }
+//
+//        CategoryRepository categoryRepo = new CategoryRepository();
+//        MenuItemRepository menuRepo = new MenuItemRepository();
+//
+//        System.out.println("Categories: " + categoryRepo.findAll().size());
+//        System.out.println("Menu items: " + menuRepo.findAll().size());
+//
+//        IngredientService ingredientService = new IngredientService();
+//
+//        System.out.println("Ingredients: " + ingredientService.getAllIngredients().size());
+//        System.out.println("Ingredient List: " + ingredientService.getAllIngredients());
+//        System.out.println("Low-stock Ingredients: " + ingredientService.getLowStockIngredients());
+//
+//        MenuItemIngredientRepository mappingRepo = new MenuItemIngredientRepository();
+//        System.out.println("Mappings: " + mappingRepo.findAll().size());
+//        System.out.println("All Mappings: " + mappingRepo.findAll());
+//
+//        OrderRepository orderRepo = new OrderRepository();
+//        OrderItemRepository orderItemRepo = new OrderItemRepository();
+//        UserRepository userRepo = new UserRepository();
+//    //    MenuItemRepository menuRepo = new MenuItemRepository();
+//
+//        User admin = userRepo.findByUsername("admin");
+//        MenuItem espresso = menuRepo.findByName("Espresso");
+//        MenuItem cappuccino = menuRepo.findByName("Cappuccino");
+//
+//        if (admin != null && espresso != null && cappuccino != null) {
+//            Order order = new Order(admin.getId(), 200.0, "CASH", java.time.LocalDateTime.now().toString());
+//            int orderId = orderRepo.save(order);
+//
+//            if (orderId != -1) {
+//                orderItemRepo.save(new OrderItem(orderId, espresso.getId(), 1, espresso.getPrice()));
+//                orderItemRepo.save(new OrderItem(orderId, cappuccino.getId(), 1, cappuccino.getPrice()));
+//
+//                System.out.println("Saved Order ID: " + orderId);
+//                System.out.println("Order: " + orderRepo.findById(orderId));
+//                System.out.println("Order Items: " + orderItemRepo.findByOrderId(orderId));
+//            }
+//        }
+//
+//
+//        CartItem cartItem1 = new CartItem(new MenuItem(1, "Espresso", 80.0, 1), 2);  // Espresso x 2
+//        CartItem cartItem2 = new CartItem(new MenuItem(2, "Cappuccino", 120.0, 2), 1);  // Cappuccino x 1
+//
+//        // Create checkout service and process the checkout
+//        CheckoutService checkoutService = new CheckoutService();
+//        String result = checkoutService.checkoutOrder(
+//                Arrays.asList(cartItem1, cartItem2),
+//                1,  // userId (admin user)
+//                "CASH"
+//        );
+//
+//        // Output result
+//        System.out.println(result);  // Expect success message or error if stock is insufficient
+//
+//
+//
+//        // Later, replace this with launch(args) for JavaFX
+//    }
 
-        UserService userService = new UserService();
-        User loggedIn = userService.login("admin", "admin");
+//public static void main(String[] args) {
+//    // Initialize the database (creating necessary tables)
+//    DatabaseInitializer.initialize();
+//
+//    // User login process
+//    UserService userService = new UserService();
+//    User loggedIn = userService.login("admin", "admin");
+//
+//    if (loggedIn != null) {
+//        System.out.println("Login successful: " + loggedIn.getUsername() + " (" + loggedIn.getRole() + ")");
+//    } else {
+//        System.out.println("Login failed.");
+//        return;  // Exit early if login fails
+//    }
+//
+//    // Display categories and menu items count
+//    CategoryRepository categoryRepo = new CategoryRepository();
+//    MenuItemRepository menuRepo = new MenuItemRepository();
+//    System.out.println("Categories: " + categoryRepo.findAll().size());
+//    System.out.println("Menu items: " + menuRepo.findAll().size());
+//
+//    // Display ingredients and low-stock ingredients
+//    IngredientService ingredientService = new IngredientService();
+//    System.out.println("Ingredients: " + ingredientService.getAllIngredients().size());
+//    System.out.println("Ingredient List: " + ingredientService.getAllIngredients());
+//    System.out.println("Low-stock Ingredients: " + ingredientService.getLowStockIngredients());
+//
+//    // Display menu-item to ingredient mappings
+//    MenuItemIngredientRepository mappingRepo = new MenuItemIngredientRepository();
+//    System.out.println("Mappings: " + mappingRepo.findAll().size());
+//    System.out.println("All Mappings: " + mappingRepo.findAll());
+//
+//    // Create order and order items
+//    OrderRepository orderRepo = new OrderRepository();
+//    OrderItemRepository orderItemRepo = new OrderItemRepository();
+//    UserRepository userRepo = new UserRepository();
+//    MenuItem espresso = menuRepo.findByName("Espresso");
+//    MenuItem cappuccino = menuRepo.findByName("Cappuccino");
+//
+//    if (espresso != null && cappuccino != null) {
+//        Order order = new Order(loggedIn.getId(), 200.0, "CASH", java.time.LocalDateTime.now().toString());
+//        int orderId = orderRepo.save(order);
+//
+//        if (orderId != -1) {
+//            // Save order items
+//            orderItemRepo.save(new OrderItem(orderId, espresso.getId(), 1, espresso.getPrice()));
+//            orderItemRepo.save(new OrderItem(orderId, cappuccino.getId(), 1, cappuccino.getPrice()));
+//
+//            System.out.println("Order placed successfully! Order ID: " + orderId);
+//            System.out.println("Order: " + orderRepo.findById(orderId));
+//            System.out.println("Order Items: " + orderItemRepo.findByOrderId(orderId));
+//        }
+//    }
+//
+//    // Prepare cart items for checkout
+//    CartItem cartItem1 = new CartItem(new MenuItem(1, "Espresso", 80.0, 1), 2);  // Espresso x 2
+//    CartItem cartItem2 = new CartItem(new MenuItem(2, "Cappuccino", 120.0, 2), 1);  // Cappuccino x 1
+//
+//    // Process checkout
+//    CheckoutService checkoutService = new CheckoutService();
+//    String result = checkoutService.checkoutOrder(
+//            Arrays.asList(cartItem1, cartItem2),
+//            loggedIn.getId(),  // userId (admin user)
+//            "CASH"
+//    );
+//
+//    System.out.println(result);  // Success message or error if stock is insufficient
+//
+//    // Later, replace this with launch(args) for JavaFX
+//    }
 
-        if (loggedIn != null) {
-            System.out.println("Login successful: " + loggedIn.getUsername() + " (" + loggedIn.getRole() + ")");
-        } else {
-            System.out.println("Login failed.");
-        }
 
-        CategoryRepository categoryRepo = new CategoryRepository();
-        MenuItemRepository menuRepo = new MenuItemRepository();
+public static void main(String[] args) {
+    // Initialize the database (creating necessary tables)
+    DatabaseInitializer.initialize();
 
-        System.out.println("Categories: " + categoryRepo.findAll().size());
-        System.out.println("Menu items: " + menuRepo.findAll().size());
+    // User login process
+    UserService userService = new UserService();
+    User loggedIn = userService.login("admin", "admin");
 
-        IngredientService ingredientService = new IngredientService();
-
-        System.out.println("Ingredients: " + ingredientService.getAllIngredients().size());
-        System.out.println("Ingredient List: " + ingredientService.getAllIngredients());
-        System.out.println("Low-stock Ingredients: " + ingredientService.getLowStockIngredients());
-
-        MenuItemIngredientRepository mappingRepo = new MenuItemIngredientRepository();
-        System.out.println("Mappings: " + mappingRepo.findAll().size());
-        System.out.println("All Mappings: " + mappingRepo.findAll());
-
-        OrderRepository orderRepo = new OrderRepository();
-        OrderItemRepository orderItemRepo = new OrderItemRepository();
-        UserRepository userRepo = new UserRepository();
-    //    MenuItemRepository menuRepo = new MenuItemRepository();
-
-        User admin = userRepo.findByUsername("admin");
-        MenuItem espresso = menuRepo.findByName("Espresso");
-        MenuItem cappuccino = menuRepo.findByName("Cappuccino");
-
-        if (admin != null && espresso != null && cappuccino != null) {
-            Order order = new Order(admin.getId(), 200.0, "CASH", java.time.LocalDateTime.now().toString());
-            int orderId = orderRepo.save(order);
-
-            if (orderId != -1) {
-                orderItemRepo.save(new OrderItem(orderId, espresso.getId(), 1, espresso.getPrice()));
-                orderItemRepo.save(new OrderItem(orderId, cappuccino.getId(), 1, cappuccino.getPrice()));
-
-                System.out.println("Saved Order ID: " + orderId);
-                System.out.println("Order: " + orderRepo.findById(orderId));
-                System.out.println("Order Items: " + orderItemRepo.findByOrderId(orderId));
-            }
-        }
-
-
-        CartItem cartItem1 = new CartItem(new MenuItem(1, "Espresso", 80.0, 1), 2);  // Espresso x 2
-        CartItem cartItem2 = new CartItem(new MenuItem(2, "Cappuccino", 120.0, 2), 1);  // Cappuccino x 1
-
-        // Create checkout service and process the checkout
-        CheckoutService checkoutService = new CheckoutService();
-        String result = checkoutService.checkoutOrder(
-                Arrays.asList(cartItem1, cartItem2),
-                1,  // userId (admin user)
-                "CASH"
-        );
-
-        // Output result
-        System.out.println(result);  // Expect success message or error if stock is insufficient
-
-
-
-        // Later, replace this with launch(args) for JavaFX
+    if (loggedIn != null) {
+        System.out.println("Login successful: " + loggedIn.getUsername() + " (" + loggedIn.getRole() + ")");
+    } else {
+        System.out.println("Login failed.");
+        return;  // Exit early if login fails
     }
+
+    // Display categories and menu items count
+    CategoryRepository categoryRepo = new CategoryRepository();
+    MenuItemRepository menuRepo = new MenuItemRepository();
+    System.out.println("Categories: " + categoryRepo.findAll().size());
+    System.out.println("Menu items: " + menuRepo.findAll().size());
+
+    // Display ingredients and low-stock ingredients
+    IngredientService ingredientService = new IngredientService();
+    System.out.println("Ingredients: " + ingredientService.getAllIngredients().size());
+    System.out.println("Ingredient List: " + ingredientService.getAllIngredients());
+    System.out.println("Low-stock Ingredients: " + ingredientService.getLowStockIngredients());
+
+    // Display menu-item to ingredient mappings
+    MenuItemIngredientRepository mappingRepo = new MenuItemIngredientRepository();
+    System.out.println("Mappings: " + mappingRepo.findAll().size());
+    System.out.println("All Mappings: " + mappingRepo.findAll());
+
+    // Prepare cart items for checkout (the correct approach)
+    MenuItem espresso = menuRepo.findByName("Espresso");
+    MenuItem cappuccino = menuRepo.findByName("Cappuccino");
+    if (espresso == null || cappuccino == null) {
+        System.out.println("Menu items not found.");
+        return;
+    }
+
+    CartItem cartItem1 = new CartItem(espresso, 2);  // Espresso x 2
+    CartItem cartItem2 = new CartItem(cappuccino, 1);  // Cappuccino x 1
+
+    // Process checkout
+    CheckoutService checkoutService = new CheckoutService();
+    String result = checkoutService.checkoutOrder(
+            Arrays.asList(cartItem1, cartItem2),
+            loggedIn.getId(),  // userId (admin user)
+            "CASH"
+    );
+
+    System.out.println(result);  // Success message or error if stock is insufficient
+
+    // Later, replace this with launch(args) for JavaFX
+    }
+
 
 }
